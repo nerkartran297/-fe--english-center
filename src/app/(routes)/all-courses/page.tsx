@@ -390,7 +390,7 @@ const AllCourses: React.FC = () => {
         </div>
     );
     return (
-        <div className="m-4 px-3 py-3 bg-gray-100 rounded-xl min-h-[87vh] flex flex-row gap-4">
+        <div className="m-4 bg-gray-100 rounded-xl min-h-[87vh] flex flex-row gap-4">
             {/* Filters Panel */}
             <form
                 onSubmit={handleSearch}

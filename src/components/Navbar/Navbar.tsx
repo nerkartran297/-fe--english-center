@@ -55,9 +55,43 @@ const components: { title: string; href: string; description: string }[] = [
     },
 ];
 
+const myControllers: { title: string; href: string; description: string }[] = [
+    {
+        title: "Hướng dẫn",
+        href: "/",
+        description: "Quay về trang hướng dẫn sử dụng trang web trung tâm",
+    },
+    {
+        title: "Các khóa học của trung tâm",
+        href: "/all-courses",
+        description: "Vào kho để xem tất cả các khóa học của trung tâm",
+    },
+    {
+        title: "Các khóa học của bạn",
+        href: "/your-courses",
+        description: "Các khóa học bạn đã đăng ký, vào đây để xem chi tiết",
+    },
+    {
+        title: "Các lớp học của bạn",
+        href: "/your-classes",
+        description: "Các lớp học được có từ khóa học bạn đã đăng ký",
+    },
+    {
+        title: "Thời gian biểu",
+        href: "/schedule",
+        description: "Lịch của bạn: thời gian, địa điểm, lớp học, khóa học",
+    },
+    {
+        title: "Liên hệ hỗ trợ",
+        href: "/help",
+        description:
+            "Liên hệ nhân viên học vụ để được hỗ trợ ngay lập tức trong giờ hành chính",
+    },
+];
+
 export function Navbar() {
     return (
-        <div className="py-3 px-8 w-full shadow-md">
+        <div className="py-3 px-8 w-full shadow-md bg-white border border-gray-200">
             <NavigationMenu>
                 <NavigationMenuList>
                     <NavigationMenuItem>
@@ -139,11 +173,7 @@ export function Navbar() {
                             </NavigationMenuContent>
                         </NavigationMenuItem>
                         <NavigationMenuItem>
-                            <Link
-                                href="/center/all-courses"
-                                legacyBehavior
-                                passHref
-                            >
+                            <Link href="/all-courses" legacyBehavior passHref>
                                 <NavigationMenuLink
                                     className={`${navigationMenuTriggerStyle()} text-[15px] font-medium`}
                                 >
@@ -151,24 +181,26 @@ export function Navbar() {
                                 </NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger className="text-[15px] mr-4 font-medium">
-                                Cá nhân
-                            </NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                                    {components.map((component) => (
-                                        <ListItem
-                                            key={component.title}
-                                            title={component.title}
-                                            href={component.href}
-                                        >
-                                            {component.description}
-                                        </ListItem>
-                                    ))}
-                                </ul>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
+                        <SignedIn>
+                            <NavigationMenuItem>
+                                <NavigationMenuTrigger className="text-[15px] mr-4 font-medium">
+                                    Cá nhân
+                                </NavigationMenuTrigger>
+                                <NavigationMenuContent>
+                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                                        {myControllers.map((component) => (
+                                            <ListItem
+                                                key={component.title}
+                                                title={component.title}
+                                                href={component.href}
+                                            >
+                                                {component.description}
+                                            </ListItem>
+                                        ))}
+                                    </ul>
+                                </NavigationMenuContent>
+                            </NavigationMenuItem>
+                        </SignedIn>
                         <SignedOut className={`m-0 p-0`}>
                             <SignInButton className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-[15px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
                                 Đăng nhập

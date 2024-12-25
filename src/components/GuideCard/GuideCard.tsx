@@ -16,7 +16,8 @@ const GuideCard = ({
 }) => {
     return (
         <div
-            className={`flex flex-col relative w-[500px] items-start px-8 py-4 rounded-2xl bg-[${color}] shadow-md`}
+            className={`flex flex-col relative w-[500px] items-start px-8 py-4 rounded-2xl shadow-md`}
+            style={{ background: color }}
         >
             <Link href={`${linkTo}`} className="font-semibold">
                 {name}

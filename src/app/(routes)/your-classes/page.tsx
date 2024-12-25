@@ -13,12 +13,6 @@ import {
     Filter,
 } from "lucide-react";
 import Link from "next/link";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface Class {
     classID: string;
@@ -81,7 +75,11 @@ const mockUserClasses = [
             {
                 classID: "DS2-C1",
                 name: "Giới thiệu và Cơ bản về Python",
-                schedule: ["Thứ 2", "19:30 - 21:30"],
+                schedule: [
+                    "Mon 15: 30 18:00",
+                    "Thu 19: 30 23:00",
+                    "Sat 20:00 21: 30",
+                ],
                 description: [
                     ["Tổng quan về Data Science và Machine Learning"],
                     ["Cài đặt môi trường Python và các thư viện cần thiết"],
@@ -109,7 +107,11 @@ const mockUserClasses = [
             {
                 classID: "DS2-C2",
                 name: "Numpy và Pandas Foundation",
-                schedule: ["Thứ 4", "19:30 - 21:30"],
+                schedule: [
+                    "Mon 15: 30 18:00",
+                    "Thu 19: 30 23:00",
+                    "Sat 20:00 21: 30",
+                ],
                 description: [
                     ["Giới thiệu về NumPy và tính toán ma trận"],
                     ["Xử lý dữ liệu với Pandas"],
@@ -137,7 +139,11 @@ const mockUserClasses = [
             {
                 classID: "DS2-C3",
                 name: "Visualization với Matplotlib và Seaborn",
-                schedule: ["Thứ 2", "19:30 - 21:30"],
+                schedule: [
+                    "Mon 15: 30 18:00",
+                    "Thu 19: 30 23:00",
+                    "Sat 20:00 21: 30",
+                ],
                 description: [
                     ["Cơ bản về data visualization"],
                     ["Matplotlib cho biểu đồ cơ bản"],
@@ -165,7 +171,11 @@ const mockUserClasses = [
             {
                 classID: "DS2-C4",
                 name: "Machine Learning Fundamentals",
-                schedule: ["Thứ 4", "19:30 - 21:30"],
+                schedule: [
+                    "Mon 15: 30 18:00",
+                    "Thu 19: 30 23:00",
+                    "Sat 20:00 21: 30",
+                ],
                 description: [
                     ["Giới thiệu về Machine Learning"],
                     ["Supervised vs Unsupervised Learning"],
@@ -193,7 +203,11 @@ const mockUserClasses = [
             {
                 classID: "DS2-C5",
                 name: "Project Thực tế",
-                schedule: ["Thứ 2", "19:30 - 21:30"],
+                schedule: [
+                    "Mon 15: 30 18:00",
+                    "Thu 19: 30 23:00",
+                    "Sat 20:00 21: 30",
+                ],
                 description: [
                     ["End-to-end Machine Learning project"],
                     ["Làm việc với dữ liệu thực tế"],
