@@ -112,7 +112,7 @@ export function Navbar() {
                                 <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                                     <li className="row-span-3">
                                         <NavigationMenuLink asChild>
-                                            <a
+                                            <Link
                                                 className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                                                 href="/"
                                             >
@@ -131,7 +131,7 @@ export function Navbar() {
                                                     Giúp bạn giao tiếp tiếng Anh
                                                     như người bản sứ
                                                 </p>
-                                            </a>
+                                            </Link>
                                         </NavigationMenuLink>
                                     </li>
                                     <ListItem href="/docs" title="Giới thiệu">
@@ -201,14 +201,22 @@ export function Navbar() {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                         </SignedIn>
-                        <SignedOut className={`m-0 p-0`}>
-                            <SignInButton className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-[15px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
-                                Đăng nhập
-                            </SignInButton>
-                        </SignedOut>
-                        <SignedIn className={`m-0 p-0`}>
-                            <UserButton className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-[15px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50" />
-                        </SignedIn>
+                        <div className={`m-0 p-0`}>
+                            <SignedOut>
+                                <SignInButton>
+                                    <div className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-[15px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                                        Đăng nhập
+                                    </div>
+                                </SignInButton>
+                            </SignedOut>
+                        </div>
+                        <div className={`m-0 p-0`}>
+                            <SignedIn>
+                                <div className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-[15px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                                    <UserButton />
+                                </div>
+                            </SignedIn>
+                        </div>
                     </div>
                 </NavigationMenuList>
             </NavigationMenu>

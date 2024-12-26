@@ -17,7 +17,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import debounce from "lodash/debounce";
 import Link from "next/link";
 
 interface Class {
@@ -93,170 +92,12 @@ const AllCourses: React.FC = () => {
         const fetchCourses = async (): Promise<void> => {
             try {
                 setIsLoading(true);
-                setTimeout(() => {
-                    setCourses([
-                        {
-                            courseID: "1",
-                            name: "Complete Web Development Bootcamp 2024",
-                            description:
-                                "Học lập trình web từ cơ bản đến nâng cao với HTML, CSS, JavaScript, React và Node.js",
-                            classes: [],
-                            teachers: [
-                                ["Nguyễn Văn Anh", "T001"],
-                                ["Trần Minh Đức", "T002"],
-                            ],
-                            price: 1499000,
-                            compareAtPrice: 1999000,
-                            rating: 4.8,
-                            totalVote: 245,
-                            target: [
-                                "Người mới bắt đầu học lập trình",
-                                "Sinh viên CNTT",
-                                "Người muốn chuyển nghề sang lập trình",
-                            ],
-                            sumary: [
-                                "Hiểu sâu về HTML, CSS và JavaScript",
-                                "Xây dựng website responsive",
-                                "Làm chủ React.js và Node.js",
-                                "Deploy ứng dụng thực tế",
-                            ],
-                            studentList: [],
-                            studentLimit: 100,
-                            appliedNumber: 85,
-                            currentStudent: 72,
-                            coverIMG: "/logo.jpg",
-                            startDate: "15 01 2024",
-                            endDate: "15 04 2024",
-                        },
-                        {
-                            courseID: "2",
-                            name: "Data Science và Machine Learning cơ bản",
-                            description:
-                                "Khám phá thế giới AI và ML với Python, NumPy, Pandas và Scikit-learn",
-                            classes: [],
-                            teachers: [["Dr. Hoàng Minh", "T003"]],
-                            price: 2499000,
-                            compareAtPrice: 2499000,
-                            rating: 4.9,
-                            totalVote: 128,
-                            target: [
-                                "Lập trình viên Python",
-                                "Người quan tâm đến AI/ML",
-                                "Data Analyst",
-                            ],
-                            sumary: [
-                                "Nền tảng Python cho Data Science",
-                                "Phân tích dữ liệu với Pandas",
-                                "Machine Learning cơ bản",
-                                "Thực hành với dự án thực tế",
-                            ],
-                            studentList: [],
-                            studentLimit: 50,
-                            appliedNumber: 42,
-                            currentStudent: 38,
-                            coverIMG: "/logo.jpg",
-                            startDate: "01 02 2024",
-                            endDate: "30 04 2024",
-                        },
-                        {
-                            courseID: "3",
-                            name: "UI/UX Design Masterclass",
-                            description:
-                                "Học thiết kế giao diện người dùng chuyên nghiệp với Figma và Adobe XD",
-                            classes: [],
-                            teachers: [
-                                ["Lê Thị Mai", "T004"],
-                                ["Phạm Văn Bình", "T005"],
-                            ],
-                            price: 899000,
-                            compareAtPrice: 1299000,
-                            rating: 4.7,
-                            totalVote: 89,
-                            target: [
-                                "Người mới bắt đầu học UI/UX",
-                                "Graphic Designer",
-                                "Product Manager",
-                            ],
-                            sumary: [
-                                "Nguyên lý thiết kế UI/UX",
-                                "Thành thạo Figma",
-                                "Design System",
-                                "Portfolio thực tế",
-                            ],
-                            studentList: [],
-                            studentLimit: 60,
-                            appliedNumber: 45,
-                            currentStudent: 40,
-                            coverIMG: "/logo.jpg",
-                            startDate: "10 02 2024",
-                            endDate: "10 05 2024",
-                        },
-                        {
-                            courseID: "4",
-                            name: "Advanced React & NextJS Development",
-                            description:
-                                "Xây dựng ứng dụng web hiện đại với React 18, NextJS 14 và TypeScript",
-                            classes: [],
-                            teachers: [["Alex Johnson", "T006"]],
-                            price: 1799000,
-                            compareAtPrice: 2299000,
-                            rating: 4.9,
-                            totalVote: 156,
-                            target: [
-                                "React Developer",
-                                "Frontend Developer",
-                                "Fullstack Developer",
-                            ],
-                            sumary: [
-                                "React 18 new features",
-                                "Server Components",
-                                "NextJS App Router",
-                                "Performance Optimization",
-                            ],
-                            studentList: [],
-                            studentLimit: 80,
-                            appliedNumber: 65,
-                            currentStudent: 58,
-                            coverIMG: "/logo.jpg",
-                            startDate: "20 02 2024",
-                            endDate: "20 05 2024",
-                        },
-                        {
-                            courseID: "5",
-                            name: "DevOps & Cloud Engineering",
-                            description:
-                                "Làm chủ CI/CD, Docker, Kubernetes và AWS Cloud",
-                            classes: [],
-                            teachers: [
-                                ["David Nguyen", "T007"],
-                                ["Maria Garcia", "T008"],
-                            ],
-                            price: 2999000,
-                            compareAtPrice: 3499000,
-                            rating: 4.8,
-                            totalVote: 92,
-                            target: [
-                                "Backend Developer",
-                                "System Administrator",
-                                "DevOps Engineer",
-                            ],
-                            sumary: [
-                                "CI/CD Pipeline",
-                                "Container Orchestration",
-                                "Cloud Architecture",
-                                "Infrastructure as Code",
-                            ],
-                            studentList: [],
-                            studentLimit: 40,
-                            appliedNumber: 35,
-                            currentStudent: 32,
-                            coverIMG: "/logo.jpg",
-                            startDate: "05 03 2024",
-                            endDate: "05 06 2024",
-                        },
-                    ]);
-                    setIsLoading(false);
-                }, 1000);
+                const response = await fetch(
+                    "http://localhost:5000/api/courses"
+                );
+                const data = await response.json();
+                setCourses(data);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching courses:", error);
                 setIsLoading(false);
@@ -292,20 +133,6 @@ const AllCourses: React.FC = () => {
         },
         [formInputs]
     );
-
-    const debouncedSearch = useMemo(
-        () =>
-            debounce(() => {
-                handleSearch();
-            }, 1000),
-        [handleSearch]
-    );
-
-    useEffect(() => {
-        return () => {
-            debouncedSearch.cancel();
-        };
-    }, [debouncedSearch]);
 
     const clearFilters = () => {
         const emptyFilters = {

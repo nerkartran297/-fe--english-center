@@ -1,8 +1,6 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import {
-    Calendar,
     Clock,
     Video,
     ChevronLeft,
@@ -18,6 +16,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 interface ParsedSchedule {
     day: string;
@@ -75,41 +74,8 @@ interface ClassSession {
     colorScheme?: "blue" | "green" | "purple" | "orange" | "pink";
 }
 
-// Mock data
-const mockSchedule: ClassSession[] = [
-    {
-        classID: "WD1-C1",
-        courseID: "1",
-        courseName: "Web Development Bootcamp",
-        className: "HTML & CSS Fundamentals",
-        schedule: ["Mon 15:30 18:00", "Thu 19:30 23:00", "Sat 20:00 21:30"],
-        meeting: "https://meet.example.com/wd1-c1",
-        teacher: "John Doe",
-        colorScheme: "blue",
-    },
-    // More mock data...
-];
-
-const getColorScheme = (
-    scheme?: "blue" | "green" | "purple" | "orange" | "pink"
-) => {
-    switch (scheme) {
-        case "blue":
-            return "border-blue-400 hover:bg-blue-50";
-        case "green":
-            return "border-green-400 hover:bg-green-50";
-        case "purple":
-            return "border-purple-400 hover:bg-purple-50";
-        case "orange":
-            return "border-orange-400 hover:bg-orange-50";
-        case "pink":
-            return "border-pink-400 hover:bg-pink-50";
-        default:
-            return "border-gray-400 hover:bg-gray-50";
-    }
-};
-
 export default function Schedule() {
+    const { user, isLoaded } = useUser();
     const [currentWeek, setCurrentWeek] = useState(new Date());
     const [schedule, setSchedule] = useState<ClassSession[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -127,22 +93,60 @@ export default function Schedule() {
     };
 
     useEffect(() => {
-        const fetchSchedule = async () => {
+        const fetchStudentInfo = async () => {
             try {
                 setIsLoading(true);
-                // Simulate API call
-                setTimeout(() => {
-                    setSchedule(mockSchedule);
-                    setIsLoading(false);
-                }, 1000);
+                // Fetch student info from API
+                if (!isLoaded || !user) return;
+
+                const response = await fetch(
+                    `http://localhost:5000/api/student-information?clerkUserID=${user.id}`
+                );
+
+                const data = await response.json();
+
+                if (data.error) {
+                    return console.error(data.error);
+                }
+
+                const studentInfo = data.student;
+
+                const scheduleData: ClassSession[] = [];
+
+                studentInfo.courses.forEach((course: any) => {
+                    const classSessions = course.classes;
+
+                    classSessions.forEach((classSession: any) => {
+                        const schedule = classSession.schedule;
+
+                        schedule.forEach((scheduleItem: any) => {
+                            const parsedSchedule = parseSchedule(scheduleItem);
+
+                            const classSessionItem: ClassSession = {
+                                classID: classSession.classID,
+                                courseID: course.courseID,
+                                courseName: course.courseName,
+                                className: classSession.className,
+                                schedule: [scheduleItem],
+                                meeting: classSession.meeting,
+                                teacher: classSession.teacher,
+                            };
+
+                            scheduleData.push(classSessionItem);
+                        });
+                    });
+                });
+
+                setSchedule(scheduleData);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching schedule:", error);
                 setIsLoading(false);
             }
         };
 
-        fetchSchedule();
-    }, [currentWeek]);
+        fetchStudentInfo();
+    }, [user, isLoaded]);
 
     const weekDates = getWeekDates(currentWeek);
 
@@ -234,9 +238,23 @@ export default function Schedule() {
                                     return (
                                         <div
                                             key={classItem.classID}
-                                            className={`bg-white rounded-md p-2 shadow-sm border-l-4 ${getColorScheme(
-                                                classItem.colorScheme
-                                            )}`}
+                                            className={`bg-white rounded-md p-2 shadow-sm border-l-4 ${
+                                                classItem.colorScheme === "blue"
+                                                    ? "border-blue-400 hover:bg-blue-50"
+                                                    : classItem.colorScheme ===
+                                                      "green"
+                                                    ? "border-green-400 hover:bg-green-50"
+                                                    : classItem.colorScheme ===
+                                                      "purple"
+                                                    ? "border-purple-400 hover:bg-purple-50"
+                                                    : classItem.colorScheme ===
+                                                      "orange"
+                                                    ? "border-orange-400 hover:bg-orange-50"
+                                                    : classItem.colorScheme ===
+                                                      "pink"
+                                                    ? "border-pink-400 hover:bg-pink-50"
+                                                    : "border-gray-400 hover:bg-gray-50"
+                                            }`}
                                         >
                                             <TooltipProvider>
                                                 <Tooltip>

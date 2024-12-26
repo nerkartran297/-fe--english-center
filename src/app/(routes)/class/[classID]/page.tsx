@@ -8,18 +8,10 @@ import {
     Video,
     FileText,
     Users,
-    BookOpen,
     CheckCircle,
     AlertCircle,
     ExternalLink,
 } from "lucide-react";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import Link from "next/link";
 
 interface Class {
     classID: string;
