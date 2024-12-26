@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import {
     Clock,
@@ -76,7 +77,7 @@ interface ClassSession {
 
 export default function Schedule() {
     const { user, isLoaded } = useUser();
-    const [currentWeek, setCurrentWeek] = useState(new Date());
+    const [weekDate, setWeekDate] = useState(new Date());
     const [schedule, setSchedule] = useState<ClassSession[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -109,11 +110,11 @@ export default function Schedule() {
                     return console.error(data.error);
                 }
 
-                const studentInfo = data.student;
+                const courseData = data;
 
                 const scheduleData: ClassSession[] = [];
 
-                studentInfo.courses.forEach((course: any) => {
+                courseData.courses.forEach((course: any) => {
                     const classSessions = course.classes;
 
                     classSessions.forEach((classSession: any) => {
@@ -121,18 +122,46 @@ export default function Schedule() {
 
                         schedule.forEach((scheduleItem: any) => {
                             const parsedSchedule = parseSchedule(scheduleItem);
+                            const courseStartDate = new Date(
+                                course.startDate.split(" ").reverse().join("-")
+                            );
+                            const courseEndDate = new Date(
+                                course.endDate.split(" ").reverse().join("-")
+                            );
+                            const weekStart = new Date(weekDate);
+                            weekStart.setDate(
+                                weekStart.getDate() - weekStart.getDay()
+                            );
+                            const weekEnd = new Date(weekStart);
+                            weekEnd.setDate(weekEnd.getDate() + 6);
 
-                            const classSessionItem: ClassSession = {
-                                classID: classSession.classID,
-                                courseID: course.courseID,
-                                courseName: course.courseName,
-                                className: classSession.className,
-                                schedule: [scheduleItem],
-                                meeting: classSession.meeting,
-                                teacher: classSession.teacher,
-                            };
+                            if (
+                                (courseStartDate >= weekStart &&
+                                    courseStartDate <= weekEnd) ||
+                                (courseEndDate >= weekStart &&
+                                    courseEndDate <= weekEnd) ||
+                                (courseStartDate <= weekStart &&
+                                    courseEndDate >= weekEnd)
+                            ) {
+                                const classSessionItem: ClassSession = {
+                                    classID: classSession.classID,
+                                    courseID: course.courseID,
+                                    courseName: course.courseName,
+                                    className: classSession.className,
+                                    schedule: [scheduleItem],
+                                    meeting: classSession.meeting,
+                                    teacher: classSession.teacher[0][0],
+                                    colorScheme: [
+                                        "blue",
+                                        "green",
+                                        "purple",
+                                        "orange",
+                                        "pink",
+                                    ][Math.floor(Math.random() * 5)],
+                                };
 
-                            scheduleData.push(classSessionItem);
+                                scheduleData.push(classSessionItem);
+                            }
                         });
                     });
                 });
@@ -146,20 +175,20 @@ export default function Schedule() {
         };
 
         fetchStudentInfo();
-    }, [user, isLoaded]);
+    }, [user, isLoaded, weekDate]);
 
-    const weekDates = getWeekDates(currentWeek);
+    const weekDates = getWeekDates(weekDate);
 
     const previousWeek = () => {
-        const newDate = new Date(currentWeek);
+        const newDate = new Date(weekDate);
         newDate.setDate(newDate.getDate() - 7);
-        setCurrentWeek(newDate);
+        setWeekDate(newDate);
     };
 
     const nextWeek = () => {
-        const newDate = new Date(currentWeek);
+        const newDate = new Date(weekDate);
         newDate.setDate(newDate.getDate() + 7);
-        setCurrentWeek(newDate);
+        setWeekDate(newDate);
     };
 
     const formatDate = (date: Date) => {

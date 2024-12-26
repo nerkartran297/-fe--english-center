@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import {
     Calendar,
@@ -17,6 +16,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 interface Assignment {
     score: number;
@@ -45,39 +46,19 @@ interface Course {
     endDate: string;
 }
 
-// Mock enrolled courses data (combining CourseInfo with Course details)
-const mockEnrolledCourses: (Course & { enrollInfo: CourseInfo })[] = [
-    {
-        courseID: "1",
-        name: "Web Development Bootcamp",
-        description: "Complete web development course from scratch to advanced",
-        teachers: [["John Doe", "T001"]],
-        price: 1499000,
-        rating: 4.8,
-        totalVote: 245,
-        coverIMG: "/web-dev.jpg",
-        startDate: "01 01 2024",
-        endDate: "31 03 2024",
-        enrollInfo: {
-            courseID: "1",
-            enrollDate: "01 01 2024",
-            isPaid: true,
-            scores: [
-                {
-                    score: 8.5,
-                    description: "HTML & CSS Basics",
-                    comment: "Good work",
-                },
-                {
-                    score: 9.0,
-                    description: "JavaScript Fundamentals",
-                    comment: "Excellent understanding",
-                },
-            ],
-        },
-    },
-    // Add more mock data...
-];
+interface ClassInfo {
+    classID: string;
+    className: string;
+    schedule: string[];
+    meeting: string;
+    teacher: string[][];
+}
+
+interface CourseData {
+    courseID: string;
+    courseName: string;
+    classes: ClassInfo[];
+}
 
 export default function YourCourses() {
     const [enrolledCourses, setEnrolledCourses] = useState<
@@ -91,17 +72,45 @@ export default function YourCourses() {
     const [filterStatus, setFilterStatus] = useState<
         "all" | "active" | "completed" | "unpaid"
     >("all");
+    const { isLoaded, user } = useUser();
 
     useEffect(() => {
         const fetchEnrolledCourses = async () => {
             try {
                 setIsLoading(true);
-                // Simulate API call
-                setTimeout(() => {
-                    setEnrolledCourses(mockEnrolledCourses);
-                    setFilteredCourses(mockEnrolledCourses);
+                if (isLoaded && user) {
+                    const response = await fetch(
+                        `http://localhost:5000/api/student-information?clerkUserID=${user.id}`
+                    );
+                    const data = await response.json();
+                    const courses = data.courses.map((course) => {
+                        return {
+                            courseID: course.courseID,
+                            name: course.courseName,
+                            description: "",
+                            teachers: course.classes[0].teacher,
+                            price: course.price,
+                            rating: course.rating,
+                            totalVote: course.totalVote,
+                            coverIMG: course.coverIMG,
+                            startDate: course.startDate,
+                            endDate: course.endDate,
+                            enrollInfo: {
+                                courseID: course.courseID,
+                                enrollDate: course.enrollDate,
+                                isPaid: course.isPaid,
+                                scores: [],
+                            },
+                        };
+                    });
+
+                    console.log(courses);
+                    setEnrolledCourses(courses);
+                    setFilteredCourses(courses);
                     setIsLoading(false);
-                }, 1000);
+                } else {
+                    setIsLoading(false);
+                }
             } catch (error) {
                 console.error("Error fetching courses:", error);
                 setIsLoading(false);
@@ -109,7 +118,7 @@ export default function YourCourses() {
         };
 
         fetchEnrolledCourses();
-    }, []);
+    }, [isLoaded, user]);
 
     useEffect(() => {
         const filtered = enrolledCourses.filter((course) => {
@@ -212,7 +221,7 @@ export default function YourCourses() {
                     {filteredCourses.map((course) => (
                         <Link
                             key={course.courseID}
-                            href={`/course-info/${course.courseID}`}
+                            href={`/course-info/${course.courseID}?paid=true`}
                             className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-blue-300 transition-colors"
                         >
                             <div className="relative">

@@ -12,6 +12,7 @@ import {
     AlertCircle,
     ExternalLink,
 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 interface Class {
     classID: string;
@@ -29,40 +30,9 @@ interface Class {
     endDate: string;
 }
 
-// Mock data for a single class
-const mockClass: Class = {
-    classID: "WD1-C1",
-    schedule: ["Mon 15:30 18:00", "Thu 19:30 23:00", "Sat 20:00 21:30"],
-    name: "HTML & CSS Fundamentals",
-    description: [
-        ["Introduction to HTML5", "Basic tags", "Document structure"],
-        ["CSS Selectors", "Box model", "Flexbox"],
-        ["Responsive design", "Media queries", "Bootstrap basics"],
-    ],
-    teachers: [
-        ["John Doe", "T001"],
-        ["Jane Smith", "T002"],
-    ],
-    lessonList: [
-        "HTML Basics",
-        "CSS Fundamentals",
-        "Responsive Design",
-        "Bootstrap Framework",
-    ],
-    progress: 2,
-    documents: [
-        "https://docs.example.com/html-basics",
-        "https://docs.example.com/css-guide",
-    ],
-    isActive: true,
-    meeting: "https://meet.example.com/wd1-c1",
-    coverIMG: "/web-dev.jpg",
-    startDate: "01 02 2024",
-    endDate: "30 04 2024",
-};
-
 export default function ClassDetail() {
     const params = useParams();
+    const { user, isLoaded } = useUser();
     const [classData, setClassData] = useState<Class | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -70,19 +40,20 @@ export default function ClassDetail() {
         const fetchClassData = async () => {
             try {
                 setIsLoading(true);
-                // Simulate API call
-                setTimeout(() => {
-                    setClassData(mockClass);
-                    setIsLoading(false);
-                }, 1000);
+                const response = await fetch(
+                    `http://localhost:5000/api/class/${params.classID}?clerkUserID=${user.id}`
+                );
+                const data = await response.json();
+                setClassData(data.classInfo);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching class:", error);
                 setIsLoading(false);
             }
         };
 
-        fetchClassData();
-    }, [params.classID]);
+        if (isLoaded && user) fetchClassData();
+    }, [params.classID, user, isLoaded]);
 
     const LoadingSkeleton = () => (
         <div className="animate-pulse space-y-4">
@@ -143,17 +114,15 @@ export default function ClassDetail() {
                             </div>
                         </div>
                     </div>
-                    {classData.isActive && (
-                        <a
-                            href={classData.meeting}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            <Video className="w-4 h-4" />
-                            Vào lớp học
-                        </a>
-                    )}
+                    <a
+                        href={classData.meeting}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        <Video className="w-4 h-4" />
+                        Vào lớp học
+                    </a>
                 </div>
 
                 {/* Schedule Grid */}
@@ -161,6 +130,7 @@ export default function ClassDetail() {
                     {classData.schedule.map((scheduleItem, index) => {
                         const [day, startTime, endTime] =
                             scheduleItem.split(" ");
+
                         return (
                             <div
                                 key={index}

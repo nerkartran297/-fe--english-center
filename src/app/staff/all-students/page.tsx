@@ -68,27 +68,21 @@ export default function AllStudents() {
                     `http://localhost:5000/api/all-students?clerkUserID=${user.id}`
                 );
 
-                const data: { userRole: string; students: Student[] } =
-                    await response.json();
+                const data = await response.json();
 
-                if (
-                    data.userRole !== "manager" &&
-                    data.userRole !== "accountant" &&
-                    data.userRole !== "admin"
-                )
-                    router.push("/");
-
-                setStudents(data.students);
+                setStudents(data);
                 // Extract unique course IDs
                 const courses = Array.from(
                     new Set(
-                        data.students.flatMap((student) =>
-                            student.courses.map((course) => course.courseID)
+                        data.forEach((student: any) =>
+                            student.courses.map(
+                                (course: any) => course.courseID
+                            )
                         )
                     )
                 );
                 setAvailableCourses(courses);
-                setFilteredStudents(data.students);
+                setFilteredStudents(data);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching students:", error);

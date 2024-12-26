@@ -55,7 +55,7 @@ export default function MyClasses() {
             setIsLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/my-classes?clerkUserId=${user.id}`,
+                    `http://localhost:5000/api/my-classes?clerkUserID=${user.id}`,
                     {
                         method: "GET",
                         headers: {

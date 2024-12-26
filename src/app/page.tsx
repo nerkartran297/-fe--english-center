@@ -10,34 +10,6 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Move fetch function outside useEffect
-    const handleFetchRole = async () => {
-        if (!user) {
-            alert("Please sign-in");
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            const response = await await fetch(
-                `http://localhost:5000/api/get-role?clerUserID=${user.id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            const result = await response.json();
-            setData(result);
-            setError(null);
-        } catch (err: any) {
-            setError(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const Guide = [
         {
             name: `Bước 1: Ghé thăm "Tất cả các khóa học"`,
@@ -101,31 +73,6 @@ export default function Home() {
                     <>
                         <div className="text-lg font-semibold mt-8 text-center">
                             Chào mừng bạn đến với English Center!
-                        </div>
-
-                        {/* Add button to fetch role */}
-                        <div className="text-center mt-4">
-                            <button
-                                onClick={handleFetchRole}
-                                disabled={isLoading}
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-                            >
-                                {isLoading ? "Đang tải..." : "Kiểm tra vai trò"}
-                            </button>
-
-                            {/* Show error if any */}
-                            {error && (
-                                <div className="text-red-500 mt-2">
-                                    Error: {error.message}
-                                </div>
-                            )}
-
-                            {/* Show data if available */}
-                            {data && (
-                                <div className="mt-2">
-                                    Role: {data.userRole}
-                                </div>
-                            )}
                         </div>
 
                         <div className="mt-8 text-center flex flex-col justify-center items-center">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
     Calendar,
     Clock,
@@ -64,6 +64,9 @@ const LoadingSkeleton = () => (
 
 export default function CourseInfo() {
     const params = useParams();
+    const searchParams = useSearchParams();
+    const paid = searchParams.get("paid") === "true";
+    console.log(paid);
     const [course, setCourse] = useState<Course | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -387,9 +390,16 @@ export default function CourseInfo() {
                             </div>
 
                             <button className="w-full bg-blue-600 text-white rounded-lg py-3 px-4 text-sm font-medium hover:bg-blue-700 transition-colors mb-4">
-                                <Link href={`/purchase/${course.courseID}`}>
-                                    Đăng ký ngay
-                                </Link>
+                                <Link
+                                    href={`/purchase/${course.courseID}`}
+                                ></Link>
+                                {paid === true ? (
+                                    <div>Đã đăng ký</div>
+                                ) : (
+                                    <Link href={`/purchase/${course.courseID}`}>
+                                        Đăng ký ngay
+                                    </Link>
+                                )}
                             </button>
 
                             <div className="space-y-4">

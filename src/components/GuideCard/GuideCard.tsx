@@ -28,7 +28,7 @@ const GuideCard = ({
                     <p key={index}>{`- ${stepValue}`}</p>
                 ))}
             </div>
-            <div className="cursor-default flex items-center justify-center z-10 absolute top-3 right-3 text-white font-bold text-[30px] border-[2px] rounded-[50px] p-2 w-[50px] h-[50px]">
+            <div className="cursor-default flex items-center justify-center absolute top-3 right-3 text-white font-bold text-[30px] border-[2px] rounded-[50px] p-2 w-[50px] h-[50px]">
                 {step}
             </div>
         </div>
