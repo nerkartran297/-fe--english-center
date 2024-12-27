@@ -82,6 +82,32 @@ const myControllers: { title: string; href: string; description: string }[] = [
         description: "Lịch của bạn: thời gian, địa điểm, lớp học, khóa học",
     },
     {
+        title: "Lương",
+        href: "/salary",
+        description: "Lương và các khoản tiền bạn nhận được từ việc dạy",
+    },
+    {
+        title: "Tài chính",
+        href: "/staff/finance",
+        description:
+            "Tài chính và các thông tin liên quan tiền bạc của công ty",
+    },
+    {
+        title: "Xác nhận học phí",
+        href: "/staff/payments",
+        description: "Xem các bill chuyển khoản của học sinh và xác nhận",
+    },
+    {
+        title: "Quản lý khóa học",
+        href: "/staff/courses",
+        description: "Quản lý các khóa học của học sinh mà trung tâm cung cấp",
+    },
+    {
+        title: "Danh sách học sinh",
+        href: "/staff/all-students",
+        description: "Quản lý tất cả các học sinh của trung tâm tiếng Anh",
+    },
+    {
         title: "Liên hệ hỗ trợ",
         href: "/help",
         description:
